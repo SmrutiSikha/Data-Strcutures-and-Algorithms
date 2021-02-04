@@ -15,6 +15,8 @@ struct Node{
 };
 
 class Trees{
+    private:
+        map<int,vector<int> > m;
     public:
         Node* root;
         Trees()
@@ -22,7 +24,8 @@ class Trees{
            root = NULL;
         }
         Node* insert(int d,Node* n);
-        void VerticalOrder();
+        void DiagonalOrder(Node* n,int diag);
+        void inorder(Node* n,int diag);
 };
 
 Node* Trees::insert(int d,Node* node)
@@ -43,41 +46,31 @@ Node* Trees::insert(int d,Node* node)
     return node;
 }
 
-void Trees::VerticalOrder()
+void Trees::DiagonalOrder(Node* n,int diag)
 {
-    if(root == NULL)
+    inorder(n,diag);
+    map<int,vector<int> >::iterator it;
+    for(it = m.begin() ; it!= m.end() ; it++)
+    {
+        vector<int> v = it->second;
+        for(int i = 0 ; i < v.size() ; i++)
+        {
+            cout<<v[i]<<" ";
+        }
+    }
+    cout<<endl;
+       
+}
+
+void Trees::inorder(Node* n,int diag)
+{
+    if(n == NULL)
     {
         return;
     }
-     map<int,vector<int> > m;
-     queue<pair<Node*,int> > q;
-     q.push(make_pair(root,0));
-    while(!q.empty())
-    {
-        Node* temp = q.front().first;
-        int dist = q.front().second;
-        m[dist].push_back(temp->data);
-        q.pop();
-        if(temp->left!=NULL)
-        {
-            q.push(make_pair(temp->left,dist-1));
-        }
-        if(temp->right!=NULL)
-        {
-            q.push(make_pair(temp->right,dist+1));
-        }
-    }
-   map<int,vector<int> >::iterator it;
-   for(it = m.begin() ; it!=m.end() ; it++)
-   {
-       vector<int> v = it->second;
-       for(int i = 0 ; i < v.size() ; i++)
-       {
-           cout<<v[i]<<" ";
-       }
-   }
-   cout<<endl;
-    
+    m[diag].push_back(n->data);
+    inorder(n->left,diag+1);
+    inorder(n->right,diag);   
 }
 
 int main()
@@ -89,5 +82,5 @@ int main()
     t.root = t.insert(6,t.root);
     t.root = t.insert(8,t.root);
     t.root = t.insert(2,t.root);
-    t.VerticalOrder();
+    t.DiagonalOrder(t.root,0);
 }
