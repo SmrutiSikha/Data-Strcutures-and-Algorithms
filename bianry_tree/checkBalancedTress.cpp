@@ -24,7 +24,6 @@ class Trees{
            root = NULL;
         }
         Node* insert(int d,Node* n);
-        void ZigZag();
         int height(Node* n);
         int BalanceFactor(Node* n);
         bool checkBalanced(Node* n);
