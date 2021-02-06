@@ -16,13 +16,15 @@ struct Node{
 
 class Trees{
     public:
+        vector<vector<int> > v;
         Node* root;
         Trees()
         {
            root = NULL;
         }
         Node* insert(int d,Node* n);
-        void leftview();
+        void leafpath(Node* n,vector<int> vis);
+        
 };
 
 Node* Trees::insert(int d,Node* node)
@@ -43,47 +45,19 @@ Node* Trees::insert(int d,Node* node)
     return node;
 }
 
-void Trees::leftview()
+void Trees::leafpath(Node* n,vector<int> vis)
 {
-    if(root == NULL)
+    if(n==NULL)
     {
         return;
     }
-    queue<Node*> q;
-    q.push(root);
-    q.push(NULL);
-    bool ispresent = true;
-    while(!q.empty())
+    vis.push_back(n->data);
+    if(n->left==NULL&&n->right==NULL)
     {
-        Node* temp = q.front();
-        if(temp != NULL)
-        {
-            if(ispresent)
-            {
-                cout<<temp->data<<" ";
-                ispresent = false;
-            }
-            q.pop();
-            if(temp->left!=NULL)
-            {
-                q.push(temp->left);
-            }
-            if(temp->right!=NULL)
-            {
-                q.push(temp->right);
-            }
-        }
-        else
-        {
-            q.pop();
-            if(!q.empty())
-            {
-                q.push(NULL);
-                ispresent = true;
-            }
-        }
+        v.push_back(vis);
     }
-    cout<<endl;
+    leafpath(n->left,vis);
+    leafpath(n->right,vis);
 }
 
 int main()
@@ -98,5 +72,15 @@ int main()
     t.root = t.insert(6,t.root);
     t.root = t.insert(2,t.root);
     t.root = t.insert(1,t.root);
-    t.leftview();
+    vector<int> vis;
+    t.leafpath(t.root,vis);
+    for(int i = 0 ; i < t.v.size() ; i++)
+    {
+        for(int j = 0 ; j < t.v[i].size() ; j++)
+        {
+            cout<<t.v[i][j]<<" ";
+        }
+        cout<<endl;
+    }
+
 }

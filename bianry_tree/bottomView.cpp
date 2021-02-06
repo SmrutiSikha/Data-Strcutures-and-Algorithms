@@ -22,7 +22,7 @@ class Trees{
            root = NULL;
         }
         Node* insert(int d,Node* n);
-        void leftview();
+        void bottomview();
 };
 
 Node* Trees::insert(int d,Node* node)
@@ -43,47 +43,36 @@ Node* Trees::insert(int d,Node* node)
     return node;
 }
 
-void Trees::leftview()
+void Trees::bottomview()
 {
     if(root == NULL)
     {
         return;
     }
-    queue<Node*> q;
-    q.push(root);
-    q.push(NULL);
-    bool ispresent = true;
+    map<int,int> m;
+    queue<pair<Node*,int> > q;
+    q.push(make_pair(root,0));
     while(!q.empty())
     {
-        Node* temp = q.front();
-        if(temp != NULL)
+        Node* temp = q.front().first;
+        int dist = q.front().second;
+        m[dist] = temp->data;
+        q.pop();
+        if(temp->left!=NULL)
         {
-            if(ispresent)
-            {
-                cout<<temp->data<<" ";
-                ispresent = false;
-            }
-            q.pop();
-            if(temp->left!=NULL)
-            {
-                q.push(temp->left);
-            }
-            if(temp->right!=NULL)
-            {
-                q.push(temp->right);
-            }
+            q.push(make_pair(temp->left,dist-1));
         }
-        else
+        if(temp->right!=NULL)
         {
-            q.pop();
-            if(!q.empty())
-            {
-                q.push(NULL);
-                ispresent = true;
-            }
-        }
+            q.push(make_pair(temp->right,dist+1));
+        }        
     }
-    cout<<endl;
+   map<int,int>::iterator it;
+   for(it = m.begin() ; it != m.end() ; it++)
+   {
+       cout<<it->second<<" ";
+   }
+   cout<<endl;
 }
 
 int main()
@@ -98,5 +87,5 @@ int main()
     t.root = t.insert(6,t.root);
     t.root = t.insert(2,t.root);
     t.root = t.insert(1,t.root);
-    t.leftview();
+    t.bottomview();
 }

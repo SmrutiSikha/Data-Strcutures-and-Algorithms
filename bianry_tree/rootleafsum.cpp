@@ -22,7 +22,8 @@ class Trees{
            root = NULL;
         }
         Node* insert(int d,Node* n);
-        void leftview();
+        void leafpath(Node* n,int s,bool& present,int sum);
+        
 };
 
 Node* Trees::insert(int d,Node* node)
@@ -43,47 +44,22 @@ Node* Trees::insert(int d,Node* node)
     return node;
 }
 
-void Trees::leftview()
+void Trees::leafpath(Node* n,int curr_sum,bool& present,int sum)
 {
-    if(root == NULL)
+    if(n==NULL)
     {
         return;
     }
-    queue<Node*> q;
-    q.push(root);
-    q.push(NULL);
-    bool ispresent = true;
-    while(!q.empty())
+    curr_sum += n->data;
+    if(n->left==NULL&&n->right==NULL)
     {
-        Node* temp = q.front();
-        if(temp != NULL)
+        if(sum == curr_sum)
         {
-            if(ispresent)
-            {
-                cout<<temp->data<<" ";
-                ispresent = false;
-            }
-            q.pop();
-            if(temp->left!=NULL)
-            {
-                q.push(temp->left);
-            }
-            if(temp->right!=NULL)
-            {
-                q.push(temp->right);
-            }
-        }
-        else
-        {
-            q.pop();
-            if(!q.empty())
-            {
-                q.push(NULL);
-                ispresent = true;
-            }
+            present = true;
         }
     }
-    cout<<endl;
+    leafpath(n->left,curr_sum,present,sum);
+    leafpath(n->right,curr_sum,present,sum);
 }
 
 int main()
@@ -98,5 +74,8 @@ int main()
     t.root = t.insert(6,t.root);
     t.root = t.insert(2,t.root);
     t.root = t.insert(1,t.root);
-    t.leftview();
+    int curr_sum = 0;
+    bool p =false;
+    t.leafpath(t.root,curr_sum,p,31);
+    cout<<p<<endl;
 }
